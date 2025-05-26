@@ -7,8 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-torch = "2.4.0"
-torchaudio = "2.4.0"
+torchaudio = "2.7"
 Cython = "^3.0.11"
 gradio = "3.34.0"
 pydub = ">=0.25.1"
@@ -56,8 +55,14 @@ onnxruntime-gpu = "^1.18.1"
 fastapi = "0.88"
 torchfcpe = "^0.0.4"
 ffmpy = "0.3.1"
-torchvision = "0.19.0"
+torchvision = "0.22"
+torch = {version = "^2.7.0", source = "pytorch-gpu"}
 [tool.poetry.dev-dependencies]
+
+[[tool.poetry.source]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu128"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
