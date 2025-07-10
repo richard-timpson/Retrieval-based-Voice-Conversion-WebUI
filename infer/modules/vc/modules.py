@@ -33,7 +33,7 @@ class VC:
 
         self.config = config
 
-    def get_vc(self, sid, *to_return_protect):
+    def get_vc(self, sid, use_full_path=False, *to_return_protect):
         logger.info("Get sid: " + sid)
 
         to_return_protect0 = {
@@ -97,7 +97,13 @@ class VC:
                 "",
                 "",
             )
-        person = f'{os.getenv("weight_root")}/{sid}'
+        
+        # Choose between full path or weight_root directory
+        if use_full_path:
+            person = sid  # Use as full path
+        else:
+            person = f'{os.getenv("weight_root")}/{sid}'  # Existing behavior
+            
         logger.info(f"Loading: {person}")
 
         self.cpt = torch.load(person, map_location="cpu")

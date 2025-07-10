@@ -24,6 +24,7 @@ def arg_parse() -> tuple:
     parser.add_argument("--f0method", type=str, default="harvest", help="harvest or pm")
     parser.add_argument("--opt_path", type=str, help="opt path")
     parser.add_argument("--model_name", type=str, help="store in assets/weight_root")
+    parser.add_argument("--model_path", type=str, help="full path to model file")
     parser.add_argument("--index_rate", type=float, default=0.66, help="index rate")
     parser.add_argument("--device", type=str, help="device")
     parser.add_argument("--is_half", type=bool, help="use half -> True")
@@ -34,6 +35,10 @@ def arg_parse() -> tuple:
 
     args = parser.parse_args()
     sys.argv = sys.argv[:1]
+    
+    # Validation: ensure at least one model parameter is provided
+    if not args.model_name and not args.model_path:
+        parser.error("Must provide either --model_name or --model_path")
 
     return args
 
@@ -45,7 +50,12 @@ def main():
     config.device = args.device if args.device else config.device
     config.is_half = args.is_half if args.is_half else config.is_half
     vc = VC(config)
-    vc.get_vc(args.model_name)
+    
+    # Choose which model parameter to use (model_name takes precedence if both provided)
+    model_identifier = args.model_name if args.model_name else args.model_path
+    use_full_path = bool(args.model_path and not args.model_name)
+    
+    vc.get_vc(model_identifier, use_full_path=use_full_path)
     _, wav_opt = vc.vc_single(
         0,
         args.input_path,
